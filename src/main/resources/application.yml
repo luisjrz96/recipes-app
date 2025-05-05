@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: recipes
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/recipes-realm
+  profiles:
+    active: dev
+
+server:
+  port: 8087
+
