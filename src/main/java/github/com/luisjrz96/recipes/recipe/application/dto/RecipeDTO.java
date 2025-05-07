@@ -26,11 +26,14 @@ public class RecipeDTO {
   @NotBlank(message = "Recipe must contain an imageUrl")
   private String imageUrl;
 
+  private boolean isPublished;
+
   @Setter
   @NotNull(message = "Recipe must have a creator")
   private UserDTO creator;
 
   public Recipe toEntity() {
-    return new Recipe(null, title, ingredients, description, imageUrl, creator.toEntity());
+    return new Recipe(
+        null, creator.toEntity(), title, ingredients, description, isPublished, imageUrl);
   }
 }

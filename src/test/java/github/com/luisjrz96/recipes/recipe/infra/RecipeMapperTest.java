@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import github.com.luisjrz96.recipes.recipe.domain.entity.Recipe;
 import github.com.luisjrz96.recipes.recipe.infra.db.mongo.RecipeDocument;
 import github.com.luisjrz96.recipes.recipe.infra.db.mongo.RecipeMapper;
-import github.com.luisjrz96.recipes.shared.domain.User;
+import github.com.luisjrz96.recipes.shared.domain.entity.User;
 import java.util.List;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -20,40 +20,22 @@ public class RecipeMapperTest {
   }
 
   @Test
-  void testToDocumentNonPublishedRecipe() {
+  void testToDocument() {
     Recipe recipe =
         new Recipe(
             "recipeId",
+            new User("userId", "John Smith", "john.smith@chef.com"),
             "title",
             List.of("ingredient1", "ingredient2"),
             "description",
-            "imageUrl",
-            new User("userId", "John Smith", "john.smith@chef.com"));
+            false,
+            "imageUrl");
     RecipeDocument recipeDocument = recipeMapper.toDocument(recipe);
     assertNotNull(recipeDocument);
     assertEquals("recipeId", recipeDocument.getId());
     assertEquals("title", recipeDocument.getTitle());
     assertEquals("userId", recipeDocument.getCreator().getId());
     assertFalse(recipeDocument.isPublished());
-  }
-
-  @Test
-  void testToDocumentPublishedRecipe() {
-    Recipe recipe =
-        new Recipe(
-            "recipeId",
-            "title",
-            List.of("ingredient1", "ingredient2"),
-            "description",
-            "imageUrl",
-            new User("userId", "John Smith", "john.smith@chef.com"));
-    recipe.publish();
-    RecipeDocument recipeDocument = recipeMapper.toDocument(recipe);
-    assertNotNull(recipeDocument);
-    assertEquals("recipeId", recipeDocument.getId());
-    assertEquals("title", recipeDocument.getTitle());
-    assertEquals("userId", recipeDocument.getCreator().getId());
-    assertTrue(recipeDocument.isPublished());
   }
 
   @Test

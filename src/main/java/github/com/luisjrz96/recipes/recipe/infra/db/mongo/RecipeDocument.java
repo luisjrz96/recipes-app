@@ -1,10 +1,12 @@
 package github.com.luisjrz96.recipes.recipe.infra.db.mongo;
 
-import github.com.luisjrz96.recipes.shared.domain.User;
+import github.com.luisjrz96.recipes.shared.domain.entity.User;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -12,6 +14,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Document(collection = "recipes")
 public class RecipeDocument {
 

@@ -5,10 +5,9 @@ import static org.mockito.Mockito.*;
 
 import github.com.luisjrz96.recipes.recipe.domain.entity.Recipe;
 import github.com.luisjrz96.recipes.recipe.domain.repository.RecipeRepository;
-import github.com.luisjrz96.recipes.shared.application.exceptions.ResourceAccessException;
-import github.com.luisjrz96.recipes.shared.application.exceptions.ResourceModificationException;
 import github.com.luisjrz96.recipes.shared.application.exceptions.ResourceNotFoundException;
-import github.com.luisjrz96.recipes.shared.domain.User;
+import github.com.luisjrz96.recipes.shared.domain.entity.User;
+import github.com.luisjrz96.recipes.shared.domain.exceptions.ResourceAccessException;
 import github.com.luisjrz96.recipes.shared.infra.web.commons.PageResult;
 import github.com.luisjrz96.recipes.shared.infra.web.commons.Pagination;
 import java.util.List;
@@ -21,7 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Mono;
 
 @ExtendWith(MockitoExtension.class)
-public class RecipeApplicationServiceTest {
+public class RecipeApplicationUseCaseContainerTest {
 
   @InjectMocks private RecipeApplicationUseCaseContainer recipeApplicationUseCaseContainer;
 
@@ -68,7 +67,7 @@ public class RecipeApplicationServiceTest {
 
     when(recipeRepository.findById("recipeId")).thenReturn(Mono.just(recipeInput));
     assertThrows(
-        ResourceModificationException.class,
+        ResourceAccessException.class,
         () -> recipeApplicationUseCaseContainer.deleteRecipe(resourceOwner, "recipeId").block());
   }
 
@@ -129,9 +128,8 @@ public class RecipeApplicationServiceTest {
   void testMakeRecipePublic_Successfully() {
     User user = new User("userId", "jhon smith", "jhon.smith@chef.com");
     Recipe recipeInput = generateRecipe("recipeId");
-    Recipe recipeOutput = generateRecipe("recipeId");
-    recipeOutput.publish();
-    when(recipeRepository.save(recipeInput)).thenReturn(Mono.just(recipeOutput));
+    when(recipeRepository.save(any(Recipe.class)))
+        .thenAnswer(invocation -> Mono.just(invocation.getArgument(0)));
     when(recipeRepository.findById("recipeId")).thenReturn(Mono.just(recipeInput));
     Recipe recipeResult =
         recipeApplicationUseCaseContainer.makeRecipePublic(user, "recipeId").block();
@@ -155,7 +153,7 @@ public class RecipeApplicationServiceTest {
 
     when(recipeRepository.findById("recipeId")).thenReturn(Mono.just(recipeInput));
     assertThrows(
-        ResourceModificationException.class,
+        ResourceAccessException.class,
         () ->
             recipeApplicationUseCaseContainer.makeRecipePublic(resourceOwner, "recipeId").block());
   }
@@ -180,10 +178,11 @@ public class RecipeApplicationServiceTest {
   private Recipe generateRecipe(String id) {
     return new Recipe(
         id,
+        new User("userId", "jhon smith", "jhon.smith@chef.com"),
         "Tacos",
         List.of("Ingredient1", "Ingredient2", "Ingredient3"),
         "ABCDEFG",
-        "/tacos.jpg",
-        new User("userId", "jhon smith", "jhon.smith@chef.com"));
+        false,
+        "/tacos.jpg");
   }
 }

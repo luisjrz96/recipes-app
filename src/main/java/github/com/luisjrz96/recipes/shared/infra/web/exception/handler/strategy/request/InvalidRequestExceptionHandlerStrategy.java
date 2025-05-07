@@ -2,9 +2,8 @@ package github.com.luisjrz96.recipes.shared.infra.web.exception.handler.strategy
 
 import static github.com.luisjrz96.recipes.shared.infra.util.Util.getErrorsFromArrayString;
 
-import github.com.luisjrz96.recipes.shared.application.exceptions.ResourceAccessException;
-import github.com.luisjrz96.recipes.shared.application.exceptions.ResourceModificationException;
 import github.com.luisjrz96.recipes.shared.application.exceptions.ResourceNotFoundException;
+import github.com.luisjrz96.recipes.shared.domain.exceptions.ResourceAccessException;
 import github.com.luisjrz96.recipes.shared.infra.web.exception.handler.ErrorResponse;
 import github.com.luisjrz96.recipes.shared.infra.web.exception.handler.strategy.ExceptionHandlerStrategy;
 import jakarta.validation.ValidationException;
@@ -22,7 +21,6 @@ public class InvalidRequestExceptionHandlerStrategy implements ExceptionHandlerS
   @Override
   public boolean supports(Throwable throwable) {
     return throwable instanceof IllegalArgumentException
-        || throwable instanceof ResourceModificationException
         || throwable instanceof ResourceNotFoundException
         || throwable instanceof ResourceAccessException
         || throwable instanceof ServerWebInputException

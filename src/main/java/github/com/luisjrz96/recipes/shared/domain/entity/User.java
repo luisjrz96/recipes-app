@@ -1,4 +1,4 @@
-package github.com.luisjrz96.recipes.shared.domain;
+package github.com.luisjrz96.recipes.shared.domain.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,6 +1,6 @@
 package github.com.luisjrz96.recipes.shared.application.dto;
 
-import github.com.luisjrz96.recipes.shared.domain.User;
+import github.com.luisjrz96.recipes.shared.domain.entity.User;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

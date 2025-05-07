@@ -1,4 +1,4 @@
-package github.com.luisjrz96.recipes.shared.application.exceptions;
+package github.com.luisjrz96.recipes.shared.domain.exceptions;
 
 public class ResourceAccessException extends RuntimeException {
 

@@ -19,15 +19,13 @@ public class RecipeMapper {
   }
 
   public Recipe toEntity(RecipeDocument doc) {
-    Recipe recipe =
-        new Recipe(
-            doc.getId(),
-            doc.getTitle(),
-            doc.getIngredients(),
-            doc.getDescription(),
-            doc.getImageUrl(),
-            doc.getCreator());
-    recipe.isPublished(doc.isPublished());
-    return recipe;
+    return new Recipe(
+        doc.getId(),
+        doc.getCreator(),
+        doc.getTitle(),
+        doc.getIngredients(),
+        doc.getDescription(),
+        doc.isPublished(),
+        doc.getImageUrl());
   }
 }

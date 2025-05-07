@@ -5,10 +5,8 @@ import github.com.luisjrz96.recipes.recipe.application.usecases.common.ListPubli
 import github.com.luisjrz96.recipes.recipe.domain.entity.Recipe;
 import github.com.luisjrz96.recipes.recipe.domain.repository.RecipeRepository;
 import github.com.luisjrz96.recipes.shared.application.DomainProperty;
-import github.com.luisjrz96.recipes.shared.application.exceptions.ResourceAccessException;
-import github.com.luisjrz96.recipes.shared.application.exceptions.ResourceModificationException;
 import github.com.luisjrz96.recipes.shared.application.exceptions.ResourceNotFoundException;
-import github.com.luisjrz96.recipes.shared.domain.User;
+import github.com.luisjrz96.recipes.shared.domain.entity.User;
 import github.com.luisjrz96.recipes.shared.infra.web.commons.PageResult;
 import github.com.luisjrz96.recipes.shared.infra.web.commons.Pagination;
 import lombok.RequiredArgsConstructor;
@@ -36,11 +34,7 @@ public class RecipeApplicationUseCaseContainer
         .findById(id)
         .switchIfEmpty(
             Mono.error(new ResourceNotFoundException(DomainProperty.RECIPE.toString(), id)))
-        .filter(recipe -> recipe.getCreator().getId().equals(user.getId()))
-        .switchIfEmpty(
-            Mono.error(
-                new ResourceModificationException(
-                    user.getId(), DomainProperty.RECIPE.toString(), id)))
+        .filter(recipe -> recipe.isOwner(user.getId()))
         .flatMap(recipe -> recipeRepository.deleteById(id));
   }
 
@@ -49,10 +43,7 @@ public class RecipeApplicationUseCaseContainer
         .findById(id)
         .switchIfEmpty(
             Mono.error(new ResourceNotFoundException(DomainProperty.RECIPE.toString(), id)))
-        .filter(recipe -> recipe.getCreator().getId().equals(user.getId()))
-        .switchIfEmpty(
-            Mono.error(
-                new ResourceAccessException(user.getId(), DomainProperty.RECIPE.toString(), id)));
+        .filter(recipe -> recipe.isOwner(user.getId()));
   }
 
   public Mono<PageResult<Recipe>> listPublishedRecipes(Pagination pagination) {
@@ -65,16 +56,8 @@ public class RecipeApplicationUseCaseContainer
         .findById(id)
         .switchIfEmpty(
             Mono.error(new ResourceNotFoundException(DomainProperty.RECIPE.toString(), id)))
-        .filter(recipe -> recipe.getCreator().getId().equals(user.getId()))
-        .switchIfEmpty(
-            Mono.error(
-                new ResourceModificationException(
-                    user.getId(), DomainProperty.RECIPE.toString(), id)))
-        .flatMap(
-            recipe -> {
-              recipe.publish();
-              return Mono.just(recipe);
-            })
+        .filter(recipe -> recipe.isOwner(user.getId()))
+        .flatMap(recipe -> Mono.just(recipe.copyWith(null, null, null, true, null)))
         .flatMap(recipeRepository::save);
   }
 
