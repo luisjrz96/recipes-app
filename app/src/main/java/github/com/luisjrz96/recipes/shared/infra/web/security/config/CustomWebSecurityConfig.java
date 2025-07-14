@@ -27,6 +27,8 @@ public class CustomWebSecurityConfig {
                     .permitAll()
                     .pathMatchers("/recipes/**")
                     .authenticated()
+                    .pathMatchers("/favorites/**")
+                    .authenticated()
                     .anyExchange()
                     .authenticated())
         .oauth2ResourceServer(

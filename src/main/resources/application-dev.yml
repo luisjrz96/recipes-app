@@ -1,4 +1,0 @@
-spring:
-  data:
-    mongodb:
-      uri: mongodb://dummy:secret@localhost:27017/recipes?authSource=admin

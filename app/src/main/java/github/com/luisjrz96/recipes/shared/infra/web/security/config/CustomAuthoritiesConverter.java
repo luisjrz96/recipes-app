@@ -1,6 +1,6 @@
 package github.com.luisjrz96.recipes.shared.infra.web.security.config;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.core.convert.converter.Converter;
@@ -11,18 +11,20 @@ import reactor.core.publisher.Flux;
 
 public class CustomAuthoritiesConverter implements Converter<Jwt, Flux<GrantedAuthority>> {
 
-  @SuppressWarnings("unchecked")
   @Override
   public Flux<GrantedAuthority> convert(Jwt jwt) {
-    List<String> roles;
+    List<String> roles = new ArrayList<>();
 
     if (jwt.getClaim("roles") != null) {
       roles = jwt.getClaimAsStringList("roles");
     } else if (jwt.getClaim("realm_access") != null) {
       var realmAccess = jwt.getClaimAsMap("realm_access");
-      roles = (List<String>) realmAccess.get("roles");
-    } else {
-      roles = Collections.emptyList();
+      Object rolesObject = realmAccess.get("roles");
+      if (rolesObject instanceof List<?>) {
+        roles =
+            ((List<?>) rolesObject)
+                .stream().filter(String.class::isInstance).map(String.class::cast).toList();
+      }
     }
 
     return Flux.fromIterable(
