@@ -1,4 +1,4 @@
-FROM gradle AS build
+FROM gradle:8.14.3-jdk21-alpine AS build
 WORKDIR /app_jar
 COPY --chown=gradle:gradle . /app_jar
 RUN gradle clean build --no-daemon
