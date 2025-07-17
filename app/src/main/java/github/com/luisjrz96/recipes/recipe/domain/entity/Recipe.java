@@ -28,7 +28,7 @@ public class Recipe {
         this.id,
         this.creator,
         title != null ? title : this.title,
-        ingredients != null ? new ArrayList<>(ingredients) : new ArrayList<>(this.ingredients),
+        ingredients != null ? new ArrayList<>(ingredients) : new ArrayList<>(),
         description != null ? description : this.description,
         isPublished || this.isPublished,
         imageUrl != null ? imageUrl : this.imageUrl);

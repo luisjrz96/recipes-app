@@ -39,46 +39,63 @@ public class RecipeHandler {
   }
 
   public Mono<ServerResponse> getById(ServerRequest serverRequest) {
-    UserDTO userDTO = serverRequest.exchange().getAttribute(RestProperty.USER_CONTEXT.toString());
     String recipeId = serverRequest.pathVariable(RestProperty.ID.toString());
 
-    return Mono.justOrEmpty(userDTO)
+    return Mono.justOrEmpty(
+            serverRequest
+                .attribute(RestProperty.USER_CONTEXT.toString())
+                .filter(UserDTO.class::isInstance)
+                .map(UserDTO.class::cast))
+        .filter(userDto -> userDto.getId() != null)
+        .switchIfEmpty(Mono.error(new InvalidUserException()))
         .switchIfEmpty(Mono.error(new InvalidUserException()))
         .flatMap(user -> applicationUseCaseContainer.getRecipeById(user.toEntity(), recipeId))
         .flatMap(recipe -> ServerResponse.ok().bodyValue(recipe));
   }
 
   public Mono<ServerResponse> create(ServerRequest serverRequest) {
-    UserDTO userDTO = serverRequest.exchange().getAttribute(RestProperty.USER_CONTEXT.toString());
-
-    return serverRequest
-        .bodyToMono(RecipeDTO.class)
-        .flatMap(util::validate)
+    return Mono.justOrEmpty(
+            serverRequest
+                .attribute(RestProperty.USER_CONTEXT.toString())
+                .filter(UserDTO.class::isInstance)
+                .map(UserDTO.class::cast))
+        .filter(userDto -> userDto.getId() != null)
+        .switchIfEmpty(Mono.error(new InvalidUserException()))
         .flatMap(
-            recipeDTO -> {
-              util.validate(userDTO);
-              recipeDTO.setCreator(userDTO);
-              return Mono.just(recipeDTO.toEntity());
-            })
+            userDto ->
+                serverRequest
+                    .bodyToMono(RecipeDTO.class)
+                    .flatMap(util::validate)
+                    .flatMap(recipeDto -> Mono.just(recipeDto.toEntity(userDto))))
         .flatMap(applicationUseCaseContainer::createRecipe)
         .flatMap(saved -> ServerResponse.status(HttpStatus.CREATED).bodyValue(saved));
   }
 
   public Mono<ServerResponse> delete(ServerRequest serverRequest) {
-    UserDTO userDTO = serverRequest.exchange().getAttribute(RestProperty.USER_CONTEXT.toString());
     String recipeId = serverRequest.pathVariable(RestProperty.ID.toString());
 
-    return Mono.justOrEmpty(userDTO)
+    return Mono.justOrEmpty(
+            serverRequest
+                .attribute(RestProperty.USER_CONTEXT.toString())
+                .filter(UserDTO.class::isInstance)
+                .map(UserDTO.class::cast))
+        .filter(userDto -> userDto.getId() != null)
+        .switchIfEmpty(Mono.error(new InvalidUserException()))
         .switchIfEmpty(Mono.error(new InvalidUserException()))
         .flatMap(user -> applicationUseCaseContainer.deleteRecipe(user.toEntity(), recipeId))
         .then(ServerResponse.noContent().build());
   }
 
   public Mono<ServerResponse> makePublic(ServerRequest serverRequest) {
-    UserDTO userDTO = serverRequest.exchange().getAttribute(RestProperty.USER_CONTEXT.toString());
     String recipeId = serverRequest.pathVariable(RestProperty.ID.toString());
 
-    return Mono.justOrEmpty(userDTO)
+    return Mono.justOrEmpty(
+            serverRequest
+                .attribute(RestProperty.USER_CONTEXT.toString())
+                .filter(UserDTO.class::isInstance)
+                .map(UserDTO.class::cast))
+        .filter(userDto -> userDto.getId() != null)
+        .switchIfEmpty(Mono.error(new InvalidUserException()))
         .filter(user -> user.getId() != null)
         .switchIfEmpty(Mono.error(new InvalidUserException()))
         .flatMap(user -> applicationUseCaseContainer.makeRecipePublic(user.toEntity(), recipeId))
@@ -86,8 +103,6 @@ public class RecipeHandler {
   }
 
   public Mono<ServerResponse> listRecipesByCreator(ServerRequest serverRequest) {
-    UserDTO userDTO = serverRequest.exchange().getAttribute(RestProperty.USER_CONTEXT.toString());
-
     int page =
         Integer.parseInt(
             serverRequest
@@ -99,7 +114,13 @@ public class RecipeHandler {
                 .queryParam(RestProperty.SIZE.toString())
                 .orElse(RestProperty.ZERO.toString()));
 
-    return Mono.justOrEmpty(userDTO)
+    return Mono.justOrEmpty(
+            serverRequest
+                .attribute(RestProperty.USER_CONTEXT.toString())
+                .filter(UserDTO.class::isInstance)
+                .map(UserDTO.class::cast))
+        .filter(userDto -> userDto.getId() != null)
+        .switchIfEmpty(Mono.error(new InvalidUserException()))
         .filter(user -> user.getId() != null)
         .switchIfEmpty(Mono.error(new InvalidUserException()))
         .flatMap(

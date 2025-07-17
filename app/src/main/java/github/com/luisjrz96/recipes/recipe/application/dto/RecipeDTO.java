@@ -3,12 +3,10 @@ package github.com.luisjrz96.recipes.recipe.application.dto;
 import github.com.luisjrz96.recipes.recipe.domain.entity.Recipe;
 import github.com.luisjrz96.recipes.shared.application.dto.UserDTO;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
 @AllArgsConstructor
@@ -28,11 +26,7 @@ public class RecipeDTO {
 
   private boolean isPublished;
 
-  @Setter
-  @NotNull(message = "Recipe must have a creator")
-  private UserDTO creator;
-
-  public Recipe toEntity() {
+  public Recipe toEntity(UserDTO creator) {
     return new Recipe(
         null, creator.toEntity(), title, ingredients, description, isPublished, imageUrl);
   }
