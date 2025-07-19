@@ -1,15 +1,17 @@
 spring:
   application:
     name: recipes
+  profiles:
+    active: dev
 
   security:
     oauth2:
       resourceserver:
         jwt:
           issuer-uri: http://keycloak:8080/realms/recipes
-  profiles:
-    active: dev
-
+  data:
+    mongodb:
+      auto-index-creation: true
 server:
   port: 8087
 

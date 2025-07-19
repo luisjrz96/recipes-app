@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Getter
@@ -16,5 +17,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class CategoryDocument {
   @Id private String id;
 
+  @Indexed(unique = true)
   @NotBlank private String name;
 }
