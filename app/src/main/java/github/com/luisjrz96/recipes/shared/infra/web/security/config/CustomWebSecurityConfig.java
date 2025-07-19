@@ -23,8 +23,10 @@ public class CustomWebSecurityConfig {
         .authorizeExchange(
             exchanges ->
                 exchanges
-                    .pathMatchers(HttpMethod.GET, "/recipes")
+                    .pathMatchers(HttpMethod.GET, "/recipes", "/categories")
                     .permitAll()
+                    .pathMatchers("/categories/**")
+                    .hasRole("admin_recipes")
                     .pathMatchers("/recipes/**")
                     .authenticated()
                     .pathMatchers("/favorites/**")
