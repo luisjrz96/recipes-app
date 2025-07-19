@@ -22,7 +22,7 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 @ExtendWith(MockitoExtension.class)
-public class MongoRecipeRepositoryPortImplTest {
+class MongoRecipeRepositoryPortImplTest {
 
   @InjectMocks private MongoRecipeRepositoryPortImpl mongoRecipeRepositoryPort;
 
@@ -65,6 +65,7 @@ public class MongoRecipeRepositoryPortImplTest {
   void testDeleteById() {
     when(mongoRecipeRepository.deleteById("recipeId")).thenReturn(Mono.empty());
     mongoRecipeRepositoryPort.deleteById("recipeId");
+    verify(mongoRecipeRepository).deleteById("recipeId");
   }
 
   @Test

@@ -1,10 +1,8 @@
-package github.com.luisjrz96.recipes.recipe.infra;
+package github.com.luisjrz96.recipes.recipe.infra.db.mongo;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import github.com.luisjrz96.recipes.recipe.domain.entity.Recipe;
-import github.com.luisjrz96.recipes.recipe.infra.db.mongo.RecipeDocument;
-import github.com.luisjrz96.recipes.recipe.infra.db.mongo.RecipeMapper;
 import github.com.luisjrz96.recipes.shared.domain.entity.User;
 import java.util.List;
 import org.junit.jupiter.api.BeforeAll;

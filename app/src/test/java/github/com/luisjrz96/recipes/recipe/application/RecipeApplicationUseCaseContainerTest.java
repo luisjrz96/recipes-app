@@ -20,7 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Mono;
 
 @ExtendWith(MockitoExtension.class)
-public class RecipeApplicationUseCaseContainerTest {
+class RecipeApplicationUseCaseContainerTest {
 
   @InjectMocks private RecipeApplicationUseCaseContainer recipeApplicationUseCaseContainer;
 
