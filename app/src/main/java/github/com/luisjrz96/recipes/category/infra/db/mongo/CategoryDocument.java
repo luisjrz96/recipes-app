@@ -18,5 +18,6 @@ public class CategoryDocument {
   @Id private String id;
 
   @Indexed(unique = true)
-  @NotBlank private String name;
+  @NotBlank
+  private String name;
 }
