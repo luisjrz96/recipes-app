@@ -10,7 +10,7 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public class RecipeMapperTest {
+class RecipeMapperTest {
 
   private static RecipeMapper recipeMapper;
 

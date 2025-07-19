@@ -1,7 +1,8 @@
 package github.com.luisjrz96.recipes.shared.application;
 
 public enum DomainProperty {
-  RECIPE("Recipe");
+  RECIPE("Recipe"),
+  CATEGORY("Category");
 
   private final String text;
 
