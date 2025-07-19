@@ -48,7 +48,6 @@ public class RecipeHandler {
                 .map(UserDTO.class::cast))
         .filter(userDto -> userDto.getId() != null)
         .switchIfEmpty(Mono.error(new InvalidUserException()))
-        .switchIfEmpty(Mono.error(new InvalidUserException()))
         .flatMap(user -> applicationUseCaseContainer.getRecipeById(user.toEntity(), recipeId))
         .flatMap(recipe -> ServerResponse.ok().bodyValue(recipe));
   }

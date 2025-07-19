@@ -2,7 +2,6 @@ package github.com.luisjrz96.recipes.shared.infra.web.security.config;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -28,8 +27,6 @@ public class CustomAuthoritiesConverter implements Converter<Jwt, Flux<GrantedAu
     }
 
     return Flux.fromIterable(
-        roles.stream()
-            .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
-            .collect(Collectors.toList()));
+        roles.stream().map(role -> new SimpleGrantedAuthority("ROLE_" + role)).toList());
   }
 }
